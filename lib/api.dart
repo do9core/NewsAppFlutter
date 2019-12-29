@@ -16,7 +16,7 @@ const categorys = [
 ];
 const authority = 'newsapi.org';
 const headLine = '/v2/top-headlines';
-const _apiKey = '85c9c2cae6de432ca6260a779f955c7c';
+const _apiKey = 'REPLACE YOUR API KEY HERE.';
 
 Future<Headline> fetchHeadline(String category) async {
   final query = {'country': 'us', 'category': category};
