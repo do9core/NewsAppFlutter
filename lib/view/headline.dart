@@ -1,23 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:news_application/util.dart';
+import 'package:news_application/view/navigation.dart';
+import 'package:news_application/util/util.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'api.dart';
-import 'app.dart';
-import 'model.dart';
+import '../data/remote/api.dart';
+import '../app_states.dart';
+import '../data/model.dart';
 
 class HeadlinePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: categorys.length,
+      length: Categories.length,
       child: Scaffold(
         appBar: AppBar(
           title: Text('Headlines'),
+          actions: <Widget>[
+            Builder(
+              builder: (context) => IconButton(
+                icon: Icon(Icons.favorite),
+                onPressed: () {
+                  Navigator.pushNamed(context, FavouritesPath);
+                },
+              ),
+            )
+          ],
           bottom: TabBar(
             isScrollable: true,
-            tabs: categorys
+            tabs: Categories
                 .map((category) => Tab(text: category.capitalize()))
                 .toList(),
           ),
@@ -30,7 +41,7 @@ class HeadlinePage extends StatelessWidget {
         ),
         body: TabBarView(
           children:
-          categorys.map((category) => HeadlineList(category)).toList(),
+          Categories.map((category) => HeadlineList(category)).toList(),
         ),
       ),
     );
@@ -49,7 +60,7 @@ class HeadlineList extends StatefulWidget {
   State<StatefulWidget> createState() => _HeadlineListState();
 }
 
-class _HeadlineListState extends State<HeadlineList> {
+class _HeadlineListState extends State<HeadlineList> with AutomaticKeepAliveClientMixin {
   Future<Headline> headline;
 
   @override
@@ -84,6 +95,9 @@ class _HeadlineListState extends State<HeadlineList> {
   Widget _buildItem(BuildContext context, Article data) {
     return HeadlineListItem(data);
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class HeadlineListItem extends StatelessWidget {

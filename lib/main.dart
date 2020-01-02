@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:news_application/view/navigation.dart';
 
-import 'headline.dart';
+import 'app_states.dart';
 
 void main() => runApp(MyApp());
 
@@ -8,9 +9,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'News Application',
+      title: AppName,
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: HeadlinePage(),
+      initialRoute: RootPath,
+      routes: Routes,
     );
   }
 }

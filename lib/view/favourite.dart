@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:news_application/app.dart';
-import 'package:news_application/model.dart';
+import 'package:news_application/app_states.dart';
+import 'package:news_application/data/model.dart';
 
 class FavouritePage extends StatefulWidget {
   @override
@@ -23,18 +23,23 @@ class _FavouritePageState extends State<FavouritePage> {
 
   Widget _buildItem(BuildContext context, num position) {
     final itemData = favourites[position];
-    return _FavouriteItem(itemData);
+    return _FavouriteItem(itemData, () => _onRemoveArticle(position));
   }
+
+  _onRemoveArticle(num position) => setState(() {
+      favourites.removeAt(position);
+  });
 }
 
 class _FavouriteItem extends StatelessWidget {
   final Article article;
+  final VoidCallback onRemoved;
 
-  _FavouriteItem(this.article);
+  _FavouriteItem(this.article, this.onRemoved);
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
+    final tile = ListTile(
       title: Text(
         article.title,
         maxLines: 2,
@@ -47,12 +52,9 @@ class _FavouriteItem extends StatelessWidget {
       ),
       trailing: IconButton(
         icon: Icon(Icons.delete),
-        onPressed: _onRemoveFav,
+        onPressed: onRemoved,
       ),
     );
-  }
-
-  _onRemoveFav() {
-    favourites.remove(article);
+    return Card(child: tile);
   }
 }
