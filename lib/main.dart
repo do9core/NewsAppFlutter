@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:news_application/view/navigation.dart';
 
-import 'app_states.dart';
-
 void main() => runApp(MyApp());
+
+const AppName = 'News Application';
 
 class MyApp extends StatelessWidget {
   @override

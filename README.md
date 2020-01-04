@@ -10,7 +10,19 @@ Preview:
 
 Video [here](https://files.catbox.moe/r4jbk3.mp4)
 
-# Licence
+## 目前实现
+
+1. 多页面跳转
+2. Sqlite本地存储
+3. 分享功能
+
+## 计划实现
+
+1. 搜索页面
+2. 分页加载（上拉加载）
+3. 刷新
+
+## Licence
 
 > Copyright 2019 do9core
 > 

@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:news_application/app_states.dart';
+import 'package:news_application/data/local/database.dart';
 import 'package:news_application/data/model.dart';
 
 class FavouritePage extends StatefulWidget {
@@ -9,26 +8,62 @@ class FavouritePage extends StatefulWidget {
 }
 
 class _FavouritePageState extends State<FavouritePage> {
+  Future<List<Article>> articles;
+
+  @override
+  void initState() {
+    super.initState();
+    articles = favourites();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final list = ListView.builder(
-      itemBuilder: _buildItem,
-      itemCount: favourites.length,
-    );
     return Scaffold(
       appBar: AppBar(title: Text('Favourites')),
-      body: list,
+      body: FutureBuilder(
+        future: articles,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return _buildErrorPage(snapshot.error);
+          }
+          return snapshot.hasData
+              ? _buildList(snapshot.data)
+              : Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 
-  Widget _buildItem(BuildContext context, num position) {
-    final itemData = favourites[position];
-    return _FavouriteItem(itemData, () => _onRemoveArticle(position));
+  Widget _buildErrorPage(Object error) {
+    return Center(
+      child: Column(
+        children: <Widget>[
+          Icon(Icons.error),
+          Text(error.toString()),
+        ],
+      ),
+    );
   }
 
-  _onRemoveArticle(num position) => setState(() {
-      favourites.removeAt(position);
-  });
+  Widget _buildList(List<Article> listData) {
+    return ListView.builder(
+      itemCount: listData.length,
+      itemBuilder: (context, position) {
+        final itemData = listData[position];
+        return _FavouriteItem(
+          itemData,
+          () => _onRemoveArticle(itemData),
+        );
+      },
+    );
+  }
+
+  _onRemoveArticle(Article article) async {
+    await article.delete();
+    setState(() {
+      articles = favourites();
+    });
+  }
 }
 
 class _FavouriteItem extends StatelessWidget {

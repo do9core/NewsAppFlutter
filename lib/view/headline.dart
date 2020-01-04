@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:news_application/view/navigation.dart';
 import 'package:news_application/util/util.dart';
+import 'package:share/share.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../data/remote/api.dart';
-import '../app_states.dart';
+import '../data/local/database.dart';
 import '../data/model.dart';
 
 class HeadlinePage extends StatelessWidget {
@@ -28,8 +29,7 @@ class HeadlinePage extends StatelessWidget {
           ],
           bottom: TabBar(
             isScrollable: true,
-            tabs: Categories
-                .map((category) => Tab(text: category.capitalize()))
+            tabs: Categories.map((category) => Tab(text: category.capitalize()))
                 .toList(),
           ),
         ),
@@ -41,15 +41,14 @@ class HeadlinePage extends StatelessWidget {
         ),
         body: TabBarView(
           children:
-          Categories.map((category) => HeadlineList(category)).toList(),
+              Categories.map((category) => HeadlineList(category)).toList(),
         ),
       ),
     );
   }
 
   _navigateToSearch(BuildContext context) {
-    // TODO: navigate to next page
-    showSnackbar(context, 'Not implement.');
+    Navigator.pushNamed(context, SearchPath);
   }
 }
 
@@ -60,7 +59,8 @@ class HeadlineList extends StatefulWidget {
   State<StatefulWidget> createState() => _HeadlineListState();
 }
 
-class _HeadlineListState extends State<HeadlineList> with AutomaticKeepAliveClientMixin {
+class _HeadlineListState extends State<HeadlineList>
+    with AutomaticKeepAliveClientMixin {
   Future<Headline> headline;
 
   @override
@@ -71,6 +71,7 @@ class _HeadlineListState extends State<HeadlineList> with AutomaticKeepAliveClie
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return FutureBuilder(
       future: headline,
       builder: (context, snapshot) {
@@ -160,7 +161,7 @@ class HeadlineListItem extends StatelessWidget {
     );
   }
 
-  void _openArticle(BuildContext context) async {
+  _openArticle(BuildContext context) async {
     if (await canLaunch(article.url)) {
       await launch(article.url);
     } else {
@@ -168,23 +169,22 @@ class HeadlineListItem extends StatelessWidget {
     }
   }
 
-  void _favouriteArticle(BuildContext context) {
-    favourites.add(article);
+  _favouriteArticle(BuildContext context) async {
+    await article.insert();
     showSnackbar(context, 'Article saved in favourites!');
   }
 
-  void _shareArticle(BuildContext context) {
-    // TODO: implement share
-    showSnackbar(context, 'Not implement');
+  _shareArticle(BuildContext context) async {
+    await Share.share('${article.title}(${article.url})');
   }
 
   Widget _buildImage() {
     return article.urlToImage == null
         ? Image.asset('images/placeholder.gif')
         : FadeInImage.memoryNetwork(
-      fit: BoxFit.cover,
-      placeholder: kTransparentImage,
-      image: article.urlToImage,
-    );
+            fit: BoxFit.cover,
+            placeholder: kTransparentImage,
+            image: article.urlToImage,
+          );
   }
 }
