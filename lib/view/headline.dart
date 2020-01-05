@@ -12,37 +12,46 @@ import '../data/model.dart';
 class HeadlinePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final page = NestedScrollView(
+      headerSliverBuilder: (context, value) {
+        return [
+          SliverAppBar(
+            title: Text('Headlines'),
+            floating: true,
+            snap: true,
+            actions: <Widget>[
+              Builder(
+                builder: (context) => IconButton(
+                  icon: Icon(Icons.favorite),
+                  onPressed: () {
+                    Navigator.pushNamed(context, FavouritesPath);
+                  },
+                ),
+              )
+            ],
+            bottom: TabBar(
+              isScrollable: true,
+              tabs:
+                  Categories.map((category) => Tab(text: category.capitalize()))
+                      .toList(),
+            ),
+          ),
+        ];
+      },
+      body: TabBarView(
+        children: Categories.map((category) => HeadlineList(category)).toList(),
+      ),
+    );
     return DefaultTabController(
       length: Categories.length,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Headlines'),
-          actions: <Widget>[
-            Builder(
-              builder: (context) => IconButton(
-                icon: Icon(Icons.favorite),
-                onPressed: () {
-                  Navigator.pushNamed(context, FavouritesPath);
-                },
-              ),
-            )
-          ],
-          bottom: TabBar(
-            isScrollable: true,
-            tabs: Categories.map((category) => Tab(text: category.capitalize()))
-                .toList(),
-          ),
-        ),
         floatingActionButton: Builder(
           builder: (context) => FloatingActionButton(
             child: Icon(Icons.search),
             onPressed: () => _navigateToSearch(context),
           ),
         ),
-        body: TabBarView(
-          children:
-              Categories.map((category) => HeadlineList(category)).toList(),
-        ),
+        body: page,
       ),
     );
   }
