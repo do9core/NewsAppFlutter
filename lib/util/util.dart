@@ -15,6 +15,8 @@ extension StringEx on String {
   }
 }
 
-showSnackbar(BuildContext context, String text) {
-  Scaffold.of(context).showSnackBar(SnackBar(content: Text(text)));
+switchSnackbar(BuildContext context, String text) {
+  Scaffold.of(context)
+    ..removeCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(text)));
 }

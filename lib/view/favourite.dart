@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:news_application/data/local/database.dart';
-import 'package:news_application/data/model.dart';
+import 'package:news_application/data/model/models.dart';
+
+const FavouriteTitle = 'Favourites';
 
 class FavouritePage extends StatefulWidget {
   @override
@@ -19,7 +21,7 @@ class _FavouritePageState extends State<FavouritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Favourites')),
+      appBar: AppBar(title: Text(FavouriteTitle)),
       body: FutureBuilder(
         future: articles,
         builder: (context, snapshot) {

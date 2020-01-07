@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:news_application/view/navigation.dart';
 import 'package:news_application/util/util.dart';
+import 'package:news_application/view/navigation.dart';
 import 'package:share/share.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../data/remote/api.dart';
 import '../data/local/database.dart';
-import '../data/model.dart';
+import '../data/model/models.dart';
+import '../data/remote/api.dart';
 
 class HeadlinePage extends StatelessWidget {
   @override
@@ -24,26 +24,27 @@ class HeadlinePage extends StatelessWidget {
                 builder: (context) => IconButton(
                   icon: Icon(Icons.favorite),
                   onPressed: () {
-                    Navigator.pushNamed(context, FavouritesPath);
+                    Navigator.pushNamed(context, FavouritePath);
                   },
                 ),
               )
             ],
             bottom: TabBar(
               isScrollable: true,
-              tabs:
-                  Categories.map((category) => Tab(text: category.capitalize()))
-                      .toList(),
+              tabs: Category.values
+                  .map((category) => Tab(text: category.name().capitalize()))
+                  .toList(),
             ),
           ),
         ];
       },
       body: TabBarView(
-        children: Categories.map((category) => HeadlineList(category)).toList(),
+        children:
+            Category.values.map((category) => HeadlineList(category)).toList(),
       ),
     );
     return DefaultTabController(
-      length: Categories.length,
+      length: Category.values.length,
       child: Scaffold(
         floatingActionButton: Builder(
           builder: (context) => FloatingActionButton(
@@ -62,8 +63,10 @@ class HeadlinePage extends StatelessWidget {
 }
 
 class HeadlineList extends StatefulWidget {
-  final String category;
+  final Category category;
+
   HeadlineList(this.category);
+
   @override
   State<StatefulWidget> createState() => _HeadlineListState();
 }
@@ -85,7 +88,15 @@ class _HeadlineListState extends State<HeadlineList>
       future: headline,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          showSnackbar(context, snapshot.error.toString());
+          return Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.error),
+                Text(snapshot.error.toString())
+              ],
+            ),
+          );
         }
         return snapshot.hasData
             ? _buildList(context, snapshot.data)
@@ -174,13 +185,13 @@ class HeadlineListItem extends StatelessWidget {
     if (await canLaunch(article.url)) {
       await launch(article.url);
     } else {
-      showSnackbar(context, 'Could not launch the url.');
+      switchSnackbar(context, 'Could not launch the url.');
     }
   }
 
   _favouriteArticle(BuildContext context) async {
     await article.insert();
-    showSnackbar(context, 'Article saved in favourites!');
+    switchSnackbar(context, 'Article saved in favourites!');
   }
 
   _shareArticle(BuildContext context) async {
