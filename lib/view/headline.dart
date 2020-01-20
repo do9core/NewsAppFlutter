@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:news_application/util/util.dart';
 import 'package:news_application/view/navigation.dart';
@@ -19,16 +21,6 @@ class HeadlinePage extends StatelessWidget {
             title: Text('Headlines'),
             floating: true,
             snap: true,
-            actions: <Widget>[
-              Builder(
-                builder: (context) => IconButton(
-                  icon: Icon(Icons.favorite),
-                  onPressed: () {
-                    Navigator.pushNamed(context, FavouritePath);
-                  },
-                ),
-              )
-            ],
             bottom: TabBar(
               isScrollable: true,
               tabs: Category.values
@@ -43,9 +35,35 @@ class HeadlinePage extends StatelessWidget {
             Category.values.map((category) => HeadlineList(category)).toList(),
       ),
     );
+    final drawer = Builder(
+      builder: (context) => Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(child: Text('News Application')),
+            ListTile(
+              title: Text('Favourites'),
+              leading: Icon(Icons.favorite),
+              onTap: () => Navigator.pushNamed(context, FavouritePath),
+            ),
+            ListTile(
+              title: Text('Watch Later'),
+              leading: Icon(Icons.watch_later),
+              onTap: () {},
+            ),
+            ListTile(
+              title: Text('App Info'),
+              leading: Icon(Icons.info),
+              onTap: () {},
+            )
+          ],
+        ),
+      )
+    );
     return DefaultTabController(
       length: Category.values.length,
       child: Scaffold(
+        drawer: drawer,
         floatingActionButton: Builder(
           builder: (context) => FloatingActionButton(
             child: Icon(Icons.search),
