@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:news_application/util/util.dart';
 import 'package:news_application/view/navigation.dart';
@@ -40,11 +38,26 @@ class HeadlinePage extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(child: Text('News Application')),
+            DrawerHeader(
+              padding: EdgeInsets.only(top: 36, left: 16),
+              child: Text(
+                'News Application',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor
+              ),
+            ),
             ListTile(
               title: Text('Favourites'),
               leading: Icon(Icons.favorite),
-              onTap: () => Navigator.pushNamed(context, FavouritePath),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, FavouritePath);
+              },
             ),
             ListTile(
               title: Text('Watch Later'),
