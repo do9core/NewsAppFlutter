@@ -47,7 +47,7 @@ class _SearchBoxState extends State<SearchBox> {
 }
 
 class SearchResult extends StatefulWidget {
-  final String query;
+  final String? query;
 
   SearchResult(this.query);
 
@@ -56,26 +56,28 @@ class SearchResult extends StatefulWidget {
 }
 
 class _SearchResultState extends State<SearchResult> {
-  Future<Everything> _everything;
+  Future<Everything>? _everything;
 
   @override
   void initState() {
     super.initState();
-    if (widget.query.isNotEmpty) {
-      _everything = fetchEverything(widget.query);
+    final query = widget.query;
+    if (query != null && query.isNotEmpty) {
+      _everything = fetchEverything(query);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.query.isNotEmpty) {
-      return FutureBuilder(
+    final query = widget.query;
+    if (query != null && query.isNotEmpty) {
+      return FutureBuilder<Everything>(
         future: _everything,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return _errorPage(snapshot.error);
           } else {
-            return snapshot.hasData ? _resultList(snapshot.data) : _loading();
+            return snapshot.hasData ? _resultList(snapshot.requireData) : _loading();
           }
         },
       );

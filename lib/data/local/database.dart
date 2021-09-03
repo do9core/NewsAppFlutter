@@ -49,9 +49,9 @@ Future<List<Article>> favourites() async {
   final List<Map<String, dynamic>> maps = await db.query(FavouriteTable);
   return List.generate(maps.length, (i) {
     return Article(
-      url: maps[i]['url'],
-      title: maps[i]['title'],
-      description: maps[i]['description'],
+      maps[i]['title'],
+      maps[i]['description'],
+      maps[i]['url']
     );
   });
 }

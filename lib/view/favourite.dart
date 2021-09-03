@@ -10,7 +10,7 @@ class FavouritePage extends StatefulWidget {
 }
 
 class _FavouritePageState extends State<FavouritePage> {
-  Future<List<Article>> articles;
+  Future<List<Article>>? articles;
 
   @override
   void initState() {
@@ -22,21 +22,21 @@ class _FavouritePageState extends State<FavouritePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(FavouriteTitle)),
-      body: FutureBuilder(
+      body: FutureBuilder<List<Article>>(
         future: articles,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return _buildErrorPage(snapshot.error);
           }
           return snapshot.hasData
-              ? _buildList(snapshot.data)
+              ? _buildList(snapshot.requireData)
               : Center(child: CircularProgressIndicator());
         },
       ),
     );
   }
 
-  Widget _buildErrorPage(Object error) {
+  Widget _buildErrorPage(Object? error) {
     return Center(
       child: Column(
         children: <Widget>[
@@ -83,7 +83,7 @@ class _FavouriteItem extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: Text(
-        article.description ?? '',
+        article.description,
         maxLines: 3,
         overflow: TextOverflow.fade,
       ),

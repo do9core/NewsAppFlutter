@@ -104,7 +104,7 @@ class HeadlineList extends StatefulWidget {
 
 class _HeadlineListState extends State<HeadlineList>
     with AutomaticKeepAliveClientMixin {
-  Future<Headline> headline;
+  Future<Headline>? headline;
 
   @override
   void initState() {
@@ -115,7 +115,7 @@ class _HeadlineListState extends State<HeadlineList>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return FutureBuilder(
+    return FutureBuilder<Headline>(
       future: headline,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -130,7 +130,7 @@ class _HeadlineListState extends State<HeadlineList>
           );
         }
         return snapshot.hasData
-            ? _buildList(context, snapshot.data)
+            ? _buildList(context, snapshot.requireData)
             : Center(child: CircularProgressIndicator());
       },
     );
@@ -138,10 +138,10 @@ class _HeadlineListState extends State<HeadlineList>
 
   Widget _buildList(BuildContext context, Headline data) {
     final articles = data.articles;
-    return ListView.builder(
+    return articles != null ? ListView.builder(
       itemCount: articles.length,
       itemBuilder: (context, pos) => _buildItem(context, articles[pos]),
-    );
+    ) : Text("No data.");
   }
 
   Widget _buildItem(BuildContext context, Article data) {
@@ -190,7 +190,7 @@ class HeadlineListItem extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: Text(
-        article.description ?? '',
+        article.description,
         maxLines: 2,
         overflow: TextOverflow.fade,
       ),
@@ -230,12 +230,13 @@ class HeadlineListItem extends StatelessWidget {
   }
 
   Widget _buildImage() {
-    return article.urlToImage == null
+    final url = article.urlToImage;
+    return url == null
         ? Image.asset('images/placeholder.gif')
         : FadeInImage.memoryNetwork(
             fit: BoxFit.cover,
             placeholder: kTransparentImage,
-            image: article.urlToImage,
+            image: url,
           );
   }
 }

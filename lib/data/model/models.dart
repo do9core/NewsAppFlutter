@@ -1,40 +1,41 @@
 class Headline {
-  String status;
-  int totalResults;
-  List<Article> articles;
+  String? status;
+  int? totalResults;
+  List<Article>? articles;
 
-  Headline({
+  Headline(
+    this.articles,
+    {
     this.status,
     this.totalResults,
-    this.articles,
   });
 
   factory Headline.fromJson(Map<String, dynamic> json) {
     return Headline(
+      List<Article>.from(json["articles"].map((x) => Article.fromJson(x))),
       status: json['status'],
       totalResults: json['totalResults'],
-      articles:
-          List<Article>.from(json["articles"].map((x) => Article.fromJson(x))),
     );
   }
 }
 
 class Article {
-  Source source;
-  String author;
+  Source? source;
+  String? author;
   String title;
   String description;
   String url;
-  String urlToImage;
-  String publishedAt;
-  String content;
+  String? urlToImage;
+  String? publishedAt;
+  String? content;
 
-  Article({
-    this.source,
-    this.author,
+  Article(
     this.title,
     this.description,
     this.url,
+    {
+    this.source,
+    this.author,
     this.urlToImage,
     this.publishedAt,
     this.content,
@@ -42,11 +43,11 @@ class Article {
 
   factory Article.fromJson(Map<String, dynamic> json) {
     return Article(
+      json['title'],
+      json['description'],
+      json['url'],
       source: Source.fromJson(json['source']),
       author: json['author'],
-      title: json['title'],
-      description: json['description'],
-      url: json['url'],
       urlToImage: json['urlToImage'],
       publishedAt: json['publishedAt'],
       content: json['content'],
@@ -55,8 +56,8 @@ class Article {
 }
 
 class Source {
-  String id;
-  String name;
+  String? id;
+  String? name;
 
   Source({
     this.id,
@@ -72,22 +73,21 @@ class Source {
 }
 
 class Everything {
-  final String status;
-  final int totalResults;
+  final String? status;
+  final int? totalResults;
   final List<Article> articles;
 
-  Everything({
+  Everything(
+    this.articles,{
     this.status,
     this.totalResults,
-    this.articles,
   });
 
   factory Everything.fromJson(Map<String, dynamic> json) {
     return Everything(
+      List<Article>.from(json["articles"].map((x) => Article.fromJson(x))),
       status: json["status"],
       totalResults: json["totalResults"],
-      articles:
-          List<Article>.from(json["articles"].map((x) => Article.fromJson(x))),
     );
   }
 }

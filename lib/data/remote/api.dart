@@ -14,10 +14,10 @@ const _apiKey = 'b21b3035a5884eceba9d84597683b7b0';
 Future<Headline> fetchHeadline(
   Category category, {
   Country country = Country.America,
-  String sources,
-  String q,
-  num pageSize,
-  num page,
+  String? sources,
+  String? q,
+  num? pageSize,
+  num? page,
 }) async {
   final query = {
     'country': country.code(),
@@ -40,16 +40,16 @@ Headline parseHeadline(String response) {
 
 Future<Everything> fetchEverything(
   String q, {
-  String qInTitle,
-  String sources,
-  String domains,
-  String excludeDomains,
-  String from,
-  String to,
-  String language,
-  String sortBy,
-  num pageSize,
-  num page,
+  String? qInTitle,
+  String? sources,
+  String? domains,
+  String? excludeDomains,
+  String? from,
+  String? to,
+  String? language,
+  String? sortBy,
+  num? pageSize,
+  num? page,
 }) async {
   final query = {
     'q': q,
